@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h2>Recent Posts: </h2>
+    {% for post in posts.items %}
+        {% include '_post.html' %}
+    {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span>Newer
+                </a>
+            </li>
+
+            <span>Page {{ posts.page }} of {{ posts.page_max }}</span>
+
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">Older
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <h3>Continue the conversation:</h3>
+    <a href="{{ url_for('posts.my_posts') }}">
+        <button type="button" class="btn btn-primary">Add Post</button>
+    </a>
+
+{% endblock %}

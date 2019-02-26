@@ -1,0 +1,20 @@
+    <table class="table table-hover">
+        <tr>
+            <td width="70px">
+            </td>
+            <td>
+                <br>
+                <span id="company{{ company.id }}"><b>{{ company.company_name }}</b>
+                <br>
+                {{ company.certificate_type }}, {{ company.company_type }}
+                <br>
+                {{ company.street_address }}, {{ company.city }}, {{ company.state }},
+{{ company.zip_code }}
+                <br>
+                Phone: {{ company.phone }}
+                <br>
+                Company Number: {{ company.ein_number }}, added on: {{ company.crawl_date }}
+                </span>
+            </td>
+        </tr>
+    </table>

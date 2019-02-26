@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>New Companies Created</h1>
+    {% for company in companies.items %}
+        {% include '_company.html' %}
+    {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span>Newer Companies
+                </a>
+            </li>
+
+            <span>Page {{ companies.page }} of {{ companies.page_max }}</span>
+
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}"> Older Companies <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    {% if stats %}
+    <span><p>Companies created this week: {{ stats.weekly_count }}</p></span>
+    <span><p>{{ stats.monthly_count }} Companies created this month.</p></span>
+    {% endif %}
+
+    {% if form %}
+    <h1>New Company updates in your inbox!</h1>
+    {{ wtf.quick_form(form) }}
+    <br>
+    {% endif %}
+{% endblock %}

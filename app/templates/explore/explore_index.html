@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h3>{{ posts_total }} total posts. <a href="{{ url_for('posts.summary') }}">View all Posts</a></h3>
+    <h4>Newest Posts: </h4>
+    {% for post in posts%}
+        {% include '_post.html' %}
+    {% endfor %}
+    <h3>{{ companies_total }} total companies. <a href="{{
+        url_for('main.companies') }}">View all Companies</a></h3>
+    <h4>Newest Companies: </h4>
+    {% for company in companies %}
+        {% include '_company.html' %}
+    {% endfor %}
+
+
+{% endblock %}
