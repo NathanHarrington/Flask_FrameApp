@@ -1,22 +1,27 @@
 environment:
   # APPVEYOR_RDP_PASSWORD: your_password_goes_here
   matrix:
-    - PYTHON_VERSION: 3.7
-      MINICONDA: C:\Miniconda37-x64
+    - PYTHON: "C:\\Python37-x64"
 
 init:
   # ps iex line enables RDP at start of build - also see on_finish
+  # To login, set an environment variable with key: appveyor_rdp_password and a
+  # long password the appveyor web configuration panel for this project.
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - set PATH=%PYTHON%;%PYTHON%\Scripts;C:\MinGW\msys\1.0\bin;%PATH%
 
 # Build is off because it is not applicable to python
 build: off
 
+install:
+  - "%PYTHON%/Scripts/pip install pipenv"
+
 test_script:
-    - "pipenv install"
-    - "pipenv shell"
-    - "python setup.py develop"
-    - "set FLASK_APP=frameapp.py"
-    - "py.test --disable-pytest-warnings -x tests/test_units.py"
+  - "pipenv install"
+  - "pipenv shell"
+  - "python setup.py develop"
+  - "set FLASK_APP=frameapp.py"
+  - "py.test --disable-pytest-warnings -x tests/test_units.py"
 
 # Do not close the session, wait for an rdp connection for 60 minutes-
 # also see init
