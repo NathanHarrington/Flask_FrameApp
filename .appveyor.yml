@@ -17,7 +17,8 @@ install:
   - "%PYTHON%/Scripts/pip install pipenv"
 
 test_script:
-  - "cd c:\projects\flask_frameapp"
+  # Why does appveyor translate underscore to hyphen?
+  - "cd c:\projects\flask-frameapp"
   - "pipenv install"
   - "pipenv run python setup.py develop"
   - "set FLASK_APP=frameapp.py"
