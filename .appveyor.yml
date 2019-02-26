@@ -18,8 +18,7 @@ install:
 
 test_script:
   - "pipenv install"
-  - "pipenv shell"
-  - "python setup.py develop"
+  - "pipenv run python setup.py develop"
   - "set FLASK_APP=frameapp.py"
   - "py.test --disable-pytest-warnings -x tests/test_units.py"
 
