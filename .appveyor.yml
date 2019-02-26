@@ -17,6 +17,7 @@ install:
   - "%PYTHON%/Scripts/pip install pipenv"
 
 test_script:
+  - "cd c:\projects\flask_frameapp"
   - "pipenv install"
   - "pipenv run python setup.py develop"
   - "set FLASK_APP=frameapp.py"
