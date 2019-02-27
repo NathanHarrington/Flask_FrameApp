@@ -19,6 +19,7 @@ requests = "*"
 pytest = "*"
 splinter = "*"
 flask-testing = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
