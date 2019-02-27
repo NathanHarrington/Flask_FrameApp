@@ -1,9 +1,10 @@
+''' Handle routes specific to the posts functionality. '''
 from flask import render_template, current_app, url_for
 from flask import redirect, flash
 from flask_login import login_required, current_user
 from math import ceil
 from app import db
-from app.models import Post, Crawled
+from app.models import Post
 from app.posts import bp
 from app.main.forms import PostForm
 

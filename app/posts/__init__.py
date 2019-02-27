@@ -1,3 +1,4 @@
+''' Posts blueprint. '''
 from flask import Blueprint
 
 bp = Blueprint('posts', __name__)

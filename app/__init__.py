@@ -1,6 +1,9 @@
-import logging
+''' Called from frameapp.py
+
+'''
+
+import logging, os
 from logging.handlers import SMTPHandler, RotatingFileHandler
-import os
 from flask import Flask, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,6 +13,7 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from config import Config
 
+# Application-wide variables
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
@@ -31,6 +35,7 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     moment.init_app(app)
 
+    # Register blueprints
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
@@ -46,8 +51,7 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    print("Create app")
-
+    # Only run mail and log configuration if not in testing or debug
     if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:
             auth = None

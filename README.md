@@ -24,10 +24,9 @@ Example travis configuration
 Example appveyor configuration
 
 Deployment instructions:
-EC2 -> Nginx -> and all the associated free tier goodness
+Amazon Web Services EC2 -> Nginx -> and all the associated free tier goodness
 
-This is based heavily on the [Flask
-Mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+This is based heavily on the [Flask Mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 </pre>
 
 ## Installation
@@ -60,6 +59,11 @@ export PATH=$PWD/scripts/drivers/linux64/:$PATH
 
 py.test --verbose tests/test_units.py
 py.test --verbose tests/test_functional.py
+
+# Check coverage statistics:
+pipenv run py.test --disable-pytest-warnings tests/test_units.py \
+    --cov=app --cov-report term-missing
+
 
 ## Testing email configuration
 pipenv run python -m smtpd -n -c DebuggingServer localhost:8025
@@ -201,34 +205,6 @@ systemctl restart nginx
 
 # Connect to the EC2 domain name with a browser, confirm security
 # exception for the self-signed certificate
-</pre>
-
-## Optional: Request a new certificate using Lets Encrypt
-<pre>
-# One-time certificate creation using Lets Encrypt
-# Simplest way to do this appears to be to make a simple nginx
-# configuration that is the default that ships with fedora plus:
-vi /etc/nginx/nginx.conf
-
-location ~ /.well-known {
-    root /usr/share/nginx/;
-}
-
-# Verify with a dry run:
-export DOMAIN=yourdomain.com
-sudo certbot certonly --webroot -w /usr/share/nginx/ -d $DOMAIN --dry-run
-
-# Run the actual
-sudo certbot certonly --webroot -w /usr/share/nginx/ -d $DOMAIN
-
-# Copy the real files, to a separate repository for backup
-cp -r  /etc/letsencrypt/archive/$DOMAIN/ \
-    /home/fedora/projects/LE_${DOMAIN}/archive_${DOMAIN}.com
-
-
-# After complete, reset to the nginx configuration for the flask
-frameapp located in deployment/nginx
-cp deployment/nginx/system_wide_nginx.conf /etc/nginx/nginx.conf
 </pre>
 
 ## Instructions for installation on Windows alongside miniconda

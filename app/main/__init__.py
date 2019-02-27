@@ -1,3 +1,4 @@
+''' Blueprint for main application functionality. '''
 from flask import Blueprint
 
 bp = Blueprint('main', __name__)

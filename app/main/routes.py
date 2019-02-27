@@ -1,3 +1,4 @@
+''' Handle routes for main application functionality. '''
 from datetime import datetime, timedelta
 from flask import render_template, flash, redirect, url_for, request, g, \
     jsonify, current_app
@@ -10,7 +11,8 @@ from app.main.forms import CrawledForm, SubscriberForm
 from app.models import User, Post, Crawled, Subscriber
 from app.main import bp
 
-
+# Example of an application-wide pre-request function. Tests where the
+# user is authenticated before any other functionlity.
 @bp.before_app_request
 def before_request():
     if current_user.is_authenticated:
@@ -41,6 +43,9 @@ def build_stats():
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 def index():
+    ''' Show the home page summary, and a form to sign up for an email
+    update. 
+    '''
     form = SubscriberForm()
     if form.validate_on_submit():
         subscriber = Subscriber(email=form.email.data)
@@ -76,6 +81,7 @@ def index():
 @bp.route('/user/<username>')
 @login_required
 def user(username):
+    ''' View details on a specific user. '''
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
     posts = user.posts.order_by(Post.timestamp.desc()).paginate(
@@ -91,6 +97,9 @@ def user(username):
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    ''' Show the users current profile, and a form to change their
+        profile information. 
+    '''
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
@@ -108,6 +117,7 @@ def edit_profile():
 @bp.route('/follow/<username>')
 @login_required
 def follow(username):
+    ''' With the currently logged in user, add a user to follow. '''
     user = User.query.filter_by(username=username).first()
     if user is None:
         flash('User %(username)s not found.', username=username)
@@ -124,6 +134,7 @@ def follow(username):
 @bp.route('/unfollow/<username>')
 @login_required
 def unfollow(username):
+    ''' With the currently logged in user, stop following a user. '''
     user = User.query.filter_by(username=username).first()
     if user is None:
         flash('User %(username)s not found.', username=username)
@@ -139,6 +150,7 @@ def unfollow(username):
 @bp.route('/companies')
 @login_required
 def companies():
+    ''' Show a summary of the current companies. '''
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['POSTS_PER_PAGE']
 
@@ -165,6 +177,8 @@ def companies():
 
 @bp.route('/new_company', methods=['GET', 'POST'])
 def new_company():
+    ''' Provide a simple interface to add a new company. Use html and
+    expect the user to populate the form by hand. '''
     form = CrawledForm()
     if form.validate_on_submit():
         cr = Crawled
@@ -189,7 +203,9 @@ def new_company():
 
 @bp.route('/json_new_company', methods=['PUT'])
 def json_new_company():
-
+    ''' Only permit a json submission of new company data. Does not
+    require login. Bare bones example of a JSON API.
+    '''
     data = request.get_json() or {}
     # loader sends a string of format:
     # 2019-02-11 10:04:07.196493

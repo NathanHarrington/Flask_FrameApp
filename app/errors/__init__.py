@@ -1,3 +1,4 @@
+''' Blueprint for displaying more pleasing error messages. '''
 from flask import Blueprint
 
 bp = Blueprint('errors', __name__)

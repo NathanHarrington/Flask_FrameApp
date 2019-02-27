@@ -1,3 +1,6 @@
+''' Handle routes specific to the explore functionality. Shows reuse of
+    models and flask_login outside the auth blueprint.
+'''
 from flask import render_template
 from flask_login import login_required
 from app.models import Post, Crawled

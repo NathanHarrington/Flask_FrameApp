@@ -1,3 +1,7 @@
+''' Dead simple blueprint example that also shows how to override error
+handling for the entire application.
+'''
+
 from flask import render_template
 from app import db
 from app.errors import bp
