@@ -10,7 +10,6 @@ install:
   - pipenv run python setup.py develop
   - export FLASK_APP=frameapp.py
 
-
 # command to run tests
 script:
   - pipenv run py.test --disable-pytest-warnings -x tests/test_units.py
