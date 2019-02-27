@@ -1,0 +1,27 @@
+In Chrome, User goes to: http://example.com/home
+
+
+Browser -> Request -> Routes -> Controller <-> Model 
+ (View)                             |
+   ^                                v
+   |                                |
+   +--<--- Response <----<----<-----+
+
+
+Where model includes the entire state of the application:
+  Users, Companies, Any database value
+  Status requests from workers
+
+The 'view' also has methods for creating requests to send to the
+controller.
+
+The view's requests can be of different formats like json or html. The
+routes direct the request to the right part of controller. The
+controller formats the view response as json or html, it is the view's
+job to render them appropriately.
+
+A request at the Controller level can combine queries of different
+portions of the model to create a response.  Or the controller can pass
+entire database objects like is typically done in this application. The
+jinja templates then extract the relevant portions at the response level
+and are sent to the browser view.

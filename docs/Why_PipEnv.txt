@@ -1,0 +1,34 @@
+Yet another python virtual environment and package manager. Why?
+
+All you have to remember is to type pipenv at the start of every python
+related command.
+
+This gives you tracked packages, automatically. You can never add a
+package on development and not have it committed to the repository.
+
+All the other goodness: lightweight, cross platform, DWIM, etc.
+
+For example, on miniconda the workflow is:
+
+conda create --name my_env
+source activate my_env
+  write some code - I need package psutil
+  pip install psutil
+  (or was it conda install - does conda have that package?)
+  pip freeze > requirements.txt
+commit changes
+
+Deploy to production
+Production environment runs code, at which point you discover you forgot
+to pip freeze, or a version number changed somewhere.
+
+In contrast:
+pipenv install
+write some code - I need package psutil
+pipenv install psutil  (pipenv records dependency automatically)
+
+Deploy to production
+Production environment runs pipenv install, which automatically installs
+the psutil dependency.
+
+
