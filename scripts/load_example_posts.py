@@ -5,8 +5,8 @@ Commit with sqlalchemy
 See load example companies for what a load can look like via HTTP
 '''
 
-import sys, json
-from random import randint, shuffle
+import sys
+from random import shuffle
 
 from app import db
 from app.models import User, Post
