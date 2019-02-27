@@ -1,0 +1,89 @@
+Red, Green, Refactor - the path to functional productivity.
+
+So many tutorials start with code, and then tack on some test cases to
+satisfy that 'TDD' requirement.
+
+Your best chance for actually writing maintainable code that releases
+you to new levels of productivity is by testing first.
+
+You're going to have to do it anyways. Every time you interact with the
+application it is a test. Automate that first in order to achieve more.
+
+Write a user story:
+
+def test_basic_home(self):
+  # Martin has heard about a cool new online listing of companies
+
+  # He checks out the home page
+
+  # He sees that the page title and header mention companies
+
+
+Run the test, see it fail.
+Write unit tests for each component.
+As the components become avaiable, fill in the functional test.
+
+This first example requires modifications to the templates only:
+def test_basic_home(self):
+    # Martin has heard about a cool new online listing of companies
+    # He checks out the home page
+    self.browser.visit('http://localhost:5000')
+
+    # He sees that the page title and page header mention companies
+    assert 'Companies' in self.browser.title
+    assert 'Companies' in self.browser.find_by_tag('li')[2]
+
+
+A more complicated example is testing the login functionality
+
+def test_login_only(self):
+    # Martin liked what he saw earlier, and signed up 
+    # He has come back to home page, he clicks the login link
+
+    # He enters his authentication details, clicks submit
+
+    # He sees the home page now says 'Edit Profile'
+
+Run the test, see it fail.
+The addition of a login link test is:
+    # He has come back to home page, he clicks the login link
+    assert self.browser.is_text_present('Login') == True
+    login_link = self.browser.find_link_by_href('/auth/login')[0]
+    login_link.click()
+ 
+The first assertion can be made to pass by modifying the base template
+to add a login link.
+
+Don't deviate into what you see in the tutorials. Tutorials skip a step
+here, and add a 'current_user' implementation through flask_login, for
+example, adding huge swaths of functionality to the application. This is
+not TDD. Do one thing at a time.
+
+Clicking the login link will return an error at this point, and that is
+fine. This is the point. You want this level of abstraction, not deeper
+levels. The goal is not to test what you can keep in your head, the goal
+is to have a mental model for rapidly achieving simple gains according
+to discipline, not talent.  Computer science curriculums teach you to
+abstract towards elegance. Test Driven Design lets you drive the car.
+
+Add a form to actually login:
+    # He enters his authentication details, clicks submit
+    self.browser.fill('username', 'martin')
+    self.browser.fill('password', 'martinspassword')
+    self.browser.find_by_name('submit').first.click()
+
+In order for the form to be fillable, it must be present. This in turn
+requires a custom route configuration (/auth/login). There are many
+ways to do this. Blueprints are the best approach.
+
+This means you'll need to modify the configuration of the app and
+register the blueprint. The route itself will need to accept GET and
+POST requests in order to display and process the form. From there
+you'll also need to test and build a data model.
+
+Switch to unit testing at this stage for speed. 
+
+You must artfully choose when to transition from Functional to Unit
+testing. Practicing this artful decision is vastly superior to pure unit
+testing or overly-thorough functional testing.
+

@@ -45,7 +45,8 @@ class TestTemporaryBase(LiveServerTestCase):
         #app.app_context.pop()
 
     def test_basic_home(self):
-        # Martin has heard about a cool new online listing of companies He goes to check out its homepage
+        # Martin has heard about a cool new online listing of companies
+        # He goes to check out its homepage
         url = 'http://localhost:5000'
         self.browser.visit(url)
 
