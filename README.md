@@ -37,39 +37,32 @@ pip install pipenv
 
 # Now that pipenv is installed, setup this environmentt 
 pipenv install --dev
-pipenv shell
 
-python setup.py develop
+pipenv run python setup.py develop
 export FLASK_APP=frameapp.py
 # On windows use:
 #  set FLASK_APP=frameapp.py
 
-flask db init
-flask db migrate
-flask db upgrade
 export FLASK_DEBUG=1
-flask run
+pipenv run flask db init
+pipenv run flask db migrate
+pipenv run flask db upgrade
+pipenv run flask run
 </pre>
 
 ## Run tests:
 <pre>
 # Make sure firefox is installed on the system, separate from the geckodriver
-pipenv shell
-export PATH=$PWD/scripts/:$PATH
-# On windows use:
-#  set FLASK_APP=frameapp.py
-py.test --verbose tests/
-</pre>
 
-## Utilities, examples
-<pre>
-# Load the example database in other pipenv shell
-python scripts/load_example_posts.py 10 10
-python scripts/load_example_companies.py 100 'http://localhost:5000'
+export PATH=$PWD/scripts/drivers/linux64/:$PATH
+# On windows use:
+#  set PATH=c:\projects\Flask_Frameapp\scripts\drivers\windows64\;%PATH%
+
+py.test --verbose tests/test_units.py
+py.test --verbose tests/test_functional.py
 
 ## Testing email configuration
-pipenv shell
-python -m smtpd -n -c DebuggingServerocalhost:8025
+pipenv run python -m smtpd -n -c DebuggingServer localhost:8025
 
 # In a separate window:
 export MAIL_SERVER=localhost
@@ -78,16 +71,28 @@ export MAIL_PORT=8025
 #  set MAIL_SERVER=localhost
 #  set MAIL_PORT=8025
 
-flask run
+pipenv run flask run
 #  Create user with bob@example.com
 #  Login -> Reset Password -> bob@example.com
 #  Look in the first terminal windows, click the link printed to log,
 #     verify that the password can be changed
+## Utilities, examples
+</pre>
+
+## Loading data 
+<pre>
+# These examples show you how to get data into the system in a variety
+# of ways
+# First, start the application in a separate window:
+pipenv run flask run
+
+# Then load the database through direct access and API:
+pipenv run python scripts/load_example_posts.py 10 10
+pipenv run python scripts/load_example_companies.py 100 'http://localhost:5000'
 </pre>
 
 ## Deploying on EC2
 <pre>
-
 # Launch a Fedora 29 Cloud Base Images for [Amazon Public
 # Cloud](https://alt.fedoraproject.org/cloud/).
 
@@ -151,18 +156,17 @@ pip install pipenv
 
 # Now that pipenv is installed, setup this environmentt 
 pipenv install --dev
-pipenv shell
 
-python setup.py develop
+python run setup.py develop
 export FLASK_APP=frameapp.py
 # On windows use:
 #  set FLASK_APP=frameapp.py
 
 # Clear db migrations, re-init database
 rm -rf migrations
-flask db init
-flask db migrate
-flask db upgrade
+pipenv run flask db init
+pipenv run flask db migrate
+pipenv run flask db upgrade
 
 
 # Now that application data is prepared, setup the WSGI interface
@@ -178,19 +182,14 @@ python3 -c "import uuid; print(uuid.uuid4().hex)" >> .env
 pipenv run gunicorn -b localhost:8000 -w 4 frameapp:app
 (ctrl-c)
 
-
 # Copy the supervisord configuration file to supervisor location
 cp deployment/supervisor/frameapp_supervisor.ini \
     /etc/supervisord.d/
-
 
 # Restart supervisord daemon
 systemctl enable supervisord
 systemctl restart supervisord
 supervisorctl reload
-
-# Create self-signed certificates for this testing application only
-
 
 # Configure nginx
 cp /etc/nginx/nginx.conf /etc/nginx/backup.nginx.conf
@@ -243,11 +242,11 @@ Run the installer, accept all defaults. Do not run the option to expand the path
 
 Edit your environment variables
 Find the lines that says:
-c:\Users\nharrington\Miniconda3
-c:\Users\nharrington\Miniconda3\Scripts
+c:\Users\username\Miniconda3
+c:\Users\username\Miniconda3\Scripts
 Above those lines add:
-C:\Users\nharrington\AppData\Local\Programs\Python\Python37
-C:\Users\nharrington\AppData\Local\Programs\Python\Python37\Scripts
+C:\Users\username\AppData\Local\Programs\Python\Python37
+C:\Users\username\AppData\Local\Programs\Python\Python37\Scripts
 
 Start a new windows command prompt, run:
 python --version
