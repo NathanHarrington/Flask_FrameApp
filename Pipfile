@@ -21,6 +21,7 @@ splinter = "*"
 flask-testing = "*"
 gunicorn = "*"
 pytest-cov = "*"
+flaskr = "*"
 
 [requires]
 python_version = "3.7"
