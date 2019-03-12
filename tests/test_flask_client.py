@@ -190,6 +190,42 @@ class TestFunctionalExamples():
                               follow_redirects=True)
         assert b'/explore' in rv.data
 
+    def test_username_taken(self):
+        # Martin has already signed up, forgets and tries again with the
+        # same username
+
+        # First sign up is successful
+        form_data = {'username': 'martin',
+                     'email': 'martin@example.com',
+                     'password': 'martin', 'password2': 'martin' }
+        rv = self.client.post('/auth/register', data=form_data,
+                              follow_redirects=True)
+        assert b'Congratulations, you are now' in rv.data
+
+        # On second submit, he sees the flash message about the problem
+        rv = self.client.post('/auth/register', data=form_data,
+                              follow_redirects=True)
+        assert b'Congratulations, you are now' not in rv.data
+        assert b'Please use a different username' in rv.data
+
+    def test_email_taken(self):
+        # Martin has already signed up, forgets and tries again with a
+        # different username but the same email
+
+        # First sign up is successful
+        form_data = {'username': 'newmartin',
+                     'email': 'martin@example.com',
+                     'password': 'martin', 'password2': 'martin' }
+        rv = self.client.post('/auth/register', data=form_data,
+                              follow_redirects=True)
+        assert b'Congratulations, you are now' in rv.data
+
+        # On second submit, he sees the flash message about the problem
+        rv = self.client.post('/auth/register', data=form_data,
+                              follow_redirects=True)
+        assert b'Congratulations, you are now' not in rv.data
+        assert b'Please use a different email' in rv.data
+
     def test_user_back_to_explore(self):
         self.load_example_user()
         self.load_example_companies()
