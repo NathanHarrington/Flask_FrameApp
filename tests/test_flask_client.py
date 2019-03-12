@@ -76,13 +76,13 @@ class TestFunctionalExamples():
         str_data = str_data.replace('\\t', '  ')
         print(str_data)
 
-    def load_example_user(self):
+    def load_example_user(self, name='martin'):
         ''' App context is already established, so connect to the db
         directly and add the test user. '''
-        muser = User(username='martin', email='martin@example.com)')
-        muser.set_password('martin')
-        assert muser.check_password('dog') == False
-        assert muser.check_password('martin') == True
+        muser = User(username=name, email='%s@example.com)' % name)
+        muser.set_password(name)
+        assert muser.check_password('not_right') == False
+        assert muser.check_password(name) == True
         db.session.add(muser)
         db.session.commit()
 
@@ -403,3 +403,168 @@ class TestFunctionalExamples():
         # Clicks explore, sees their post at the top of the list
         rv = self.client.get('/explore')
         assert b'Simulated post from tester' in rv.data
+
+    def test_user_can_change_username(self):
+        self.load_example_user()
+        self.load_example_companies()
+        self.martin_login()
+
+        # Martin looks at their profile, notices the 'username' field
+        rv = self.client.get('/edit_profile')
+        assert b'<input class="form-control" id="username"' in rv.data
+
+        # Follows the link, fills out the form, submits it
+        form_data = {'username': 'MegaMarvin' }
+        rv = self.client.post('/edit_profile', data=form_data,
+                              follow_redirects=True)
+
+        # Sees their new username on the profile page
+        assert b'MegaMarvin' in rv.data
+
+    def test_user_cannot_choose_someone_elses_name(self):
+        self.load_example_user()
+        self.load_example_companies()
+        self.martin_login()
+
+        # Add a second user to try and switch useername to
+        muser = User(username='Bob', email='bob@example.com)')
+        muser.set_password('bob')
+        db.session.add(muser)
+        db.session.commit()
+
+        # Martin looks at their profile, notices the 'username' field
+        rv = self.client.get('/edit_profile')
+        assert b'<input class="form-control" id="username"' in rv.data
+
+        # Follows the link, fills out the form, submits it
+        form_data = {'username': 'Bob' }
+        rv = self.client.post('/edit_profile', data=form_data,
+                              follow_redirects=True)
+
+        # Cannot see their new username on the profile page, gets
+        # message
+        assert b'Please use a different username' in rv.data
+        assert b'MegaMarvin' not in rv.data
+
+    def test_user_subscribes_to_updates(self):
+        # Bob goes to the home page, and immediately signs up for
+        # further details before logging in
+        rv = self.client.get('/')
+        assert b'New Company updates in your inbox' in rv.data
+
+        form_data = {'email': 'bob@example.com'}
+        rv = self.client.post('/', data=form_data,
+                              follow_redirects=True)
+
+        # Submitting takes Bob back to the index with a flash message
+        assert b'New Company updates in your inbox' in rv.data
+        assert b'You have been subscribed to updates' in rv.data
+
+    def test_user_looks_through_pages_of_companies(self):
+        # Bob goes to the home page, and clicks through some of the next
+        # few pages of company listings
+        self.load_example_companies()
+        rv = self.client.get('/')
+        assert b'New Company updates in your inbox' in rv.data
+        assert b'<a href="/index?page=2"' in rv.data
+
+        rv = self.client.get('/?page=2')
+        assert b'<a href="/index?page=3"' in rv.data
+
+    def test_martin_follows_bob(self):
+        self.load_example_user()
+        self.load_example_user('Bob')
+        self.load_example_companies()
+
+        # Martin logs in, explores and sees bob
+        self.martin_login()
+        rv = self.client.get('/explore')
+        assert b'Bob' in rv.data
+        assert b'/user/Bob' in rv.data
+
+        # Clicks bob, sees the follow link
+        rv = self.client.get('/user/Bob')
+        assert b'/follow/Bob' in rv.data
+
+        # Follows the link to follow bob, sees confirmation
+        rv = self.client.get('/follow/Bob', follow_redirects=True)
+        assert b'You are following Bob' in rv.data
+
+    def test_martin_follows_impermissible(self):
+        self.load_example_user()
+        self.load_example_companies()
+
+        # Martin logs in, then tries to game the system and guess at a
+        # username to follow that does not exist
+        self.martin_login()
+
+        rv = self.client.get('/follow/Dave', follow_redirects=True)
+        assert b'User Dave not found' in rv.data
+
+        # He then tries to follow himself:
+        rv = self.client.get('/follow/martin', follow_redirects=True)
+        assert b'You cannot follow yourself' in rv.data
+
+    def test_martin_unfollows_impermissible(self):
+        self.load_example_user()
+        self.load_example_companies()
+
+        # Martin logs in, then tries to game the system and guess at a
+        # username to unfollow that does not exist
+        self.martin_login()
+
+        rv = self.client.get('/unfollow/Dave', follow_redirects=True)
+        assert b'User Dave not found' in rv.data
+
+        # He then tries to unfollow himself:
+        rv = self.client.get('/unfollow/martin', follow_redirects=True)
+        assert b'You cannot unfollow yourself' in rv.data
+
+    def test_martin_unfollows_bob(self):
+        self.load_example_user()
+        self.load_example_user('Bob')
+        self.load_example_companies()
+        self.martin_login()
+
+        # Follows the link to follow bob, sees confirmation
+        rv = self.client.get('/follow/Bob', follow_redirects=True)
+        assert b'You are following Bob' in rv.data
+
+        # Sees link to unfollow bob
+        assert b'/unfollow/Bob' in rv.data
+
+        # Unfollows bob, sees confirmation
+        rv = self.client.get('/unfollow/Bob', follow_redirects=True)
+        assert b'You are not following Bob' in rv.data
+
+    def test_user_adds_company(self):
+        # Martin notices a company is missing, decides to add it himself
+        self.load_example_user()
+        self.load_example_user('Bob')
+        self.load_example_companies()
+        self.martin_login()
+
+        # Goes to the '/new_company' link directly, which he was told
+        # through a side channel
+        rv = self.client.get('/new_company', follow_redirects=True)
+
+        # Sees that it has form fields
+        assert b'ein_number' in rv.data
+        assert b'phone' in rv.data
+
+        # Fills out the form, clicks submit
+        form_data = {'ein_number': '1234567890',
+                     'company_type': 'LLC',
+                     'certificate_type': 'LLC',
+                     'company_name': 'LLC',
+                     'street_address': 'LLC',
+                     'city': 'LLC',
+                     'state': 'LLC',
+                     'zip_code': 'LLC',
+                     'phone': '919-267-3558'}
+        rv = self.client.post('/new_company', data=form_data,
+                              follow_redirects=True)
+
+        # Sees the flash message that says new company added
+        assert b'Added a company' in rv.data
+

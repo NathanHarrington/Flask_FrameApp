@@ -44,7 +44,7 @@ def build_stats():
 @bp.route('/index', methods=['GET', 'POST'])
 def index():
     ''' Show the home page summary, and a form to sign up for an email
-    update. 
+    update.
     '''
     form = SubscriberForm()
     if form.validate_on_submit():
@@ -120,14 +120,17 @@ def follow(username):
     ''' With the currently logged in user, add a user to follow. '''
     user = User.query.filter_by(username=username).first()
     if user is None:
-        flash('User %(username)s not found.', username=username)
+        flash(f'User {username} not found.')
         return redirect(url_for('main.index'))
+
     if user == current_user:
         flash('You cannot follow yourself!')
         return redirect(url_for('main.user', username=username))
+
     current_user.follow(user)
     db.session.commit()
-    flash('You are following %(username)s!', username=username)
+    flash(f'You are following {username}!')
+
     return redirect(url_for('main.user', username=username))
 
 
@@ -137,14 +140,16 @@ def unfollow(username):
     ''' With the currently logged in user, stop following a user. '''
     user = User.query.filter_by(username=username).first()
     if user is None:
-        flash('User %(username)s not found.', username=username)
+        flash(f'User {username} not found.')
         return redirect(url_for('main.index'))
+
     if user == current_user:
         flash('You cannot unfollow yourself!')
         return redirect(url_for('main.user', username=username))
+
     current_user.unfollow(user)
     db.session.commit()
-    flash('You are not following %(username)s.', username=username)
+    flash(f'You are not following {username}')
     return redirect(url_for('main.user', username=username))
 
 @bp.route('/companies')
@@ -191,7 +196,6 @@ def new_company():
                  state=form.state.data,
                  zip_code=form.zip_code.data,
                  phone=form.phone.data,
-                 crawl_date=form.crawl_date.data
                 )
         db.session.add(company)
         db.session.commit()
