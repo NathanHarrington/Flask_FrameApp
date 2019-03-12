@@ -226,6 +226,130 @@ class TestFunctionalExamples():
         assert b'Congratulations, you are now' not in rv.data
         assert b'Please use a different email' in rv.data
 
+    def test_login_invalid_username_password_shows_feedback(self):
+        self.load_example_user()
+
+        # Martin uses the wrong username to login
+        form_data = {'username': 'martin_oops', 'password': 'martin'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' not in rv.data
+        assert b'Invalid username or password' in rv.data
+
+        # Martin uses the wrong username to login
+        form_data = {'username': 'martin', 'password': 'martin_oops'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' not in rv.data
+        assert b'Invalid username or password' in rv.data
+
+    def test_login_twice_goes_back_to_index(self):
+        # Martin logs in
+        self.load_example_user()
+        form_data = {'username': 'martin', 'password': 'martin'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' in rv.data
+
+        # Hits back button, then tries to go to /login again without
+        # submitting the form
+        rv = self.client.get('/auth/login', follow_redirects=True)
+
+        # Which redirects him to the main index because he is already
+        # logged in
+        # He notices the page title and header mention companies
+        assert b'Companies\n</title>' in rv.data
+        assert b'<h1>New Companies' in rv.data
+
+    def test_register_after_login_goes_back_to_index(self):
+        # Martin logs in
+        self.load_example_user()
+        form_data = {'username': 'martin', 'password': 'martin'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' in rv.data
+
+        # Hits back button, then tries to go to /register again without
+        # submitting the form
+        rv = self.client.get('/auth/register', follow_redirects=True)
+
+        # Which redirects him to the main index because he is already
+        # logged in
+        # He notices the page title and header mention companies
+        assert b'Companies\n</title>' in rv.data
+        assert b'<h1>New Companies' in rv.data
+
+    def test_reset_password_after_login_goes_to_index(self):
+        # Martin logs in, then goes to the 'reset password' link
+        # directly
+        self.load_example_user()
+        form_data = {'username': 'martin', 'password': 'martin'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' in rv.data
+
+        rv = self.client.get('/auth/reset_password_request',
+                             follow_redirects=True)
+        # He sees that he's back on the main index with edit profile
+        # visible
+        assert b'Companies\n</title>' in rv.data
+        assert b'<h1>New Companies' in rv.data
+        assert b'Edit Profile' in rv.data
+
+    def test_reset_password_displays_feedback(self):
+        # Martin tries to login, fails
+        self.load_example_user()
+        form_data = {'username': 'martin', 'password': 'forgot'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' not in rv.data
+
+        # Sees the reset password link, follows it
+        self.show(rv)
+        assert b'href="/auth/reset_password_request">' in rv.data
+        rv = self.client.get('/auth/reset_password_request')
+
+        form_data = {'email': 'martin@example.com'}
+        rv = self.client.post('/auth/reset_password_request',
+                              data=form_data, follow_redirects=True)
+        msg = b'Check your email for the instructions to reset your'
+        assert msg in rv.data
+
+    def test_logout_goes_back_to_index(self):
+        # Martin logs in
+        self.load_example_user()
+        form_data = {'username': 'martin', 'password': 'martin'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+        assert b'Edit Profile' in rv.data
+
+        # Clicks the logout button, verifies he cannot see his profile,
+        # and is back at the main index
+        rv = self.client.get('/auth/logout', follow_redirects=True)
+
+        assert b'Edit Profile' not in rv.data
+        assert b'Companies\n</title>' in rv.data
+        assert b'<h1>New Companies' in rv.data
+
+    def test_revisit_of_a_password_reset_link(self):
+        # Martin logs in
+        self.load_example_user()
+        form_data = {'username': 'martin', 'password': 'martin'}
+        rv = self.client.post('/auth/login', data=form_data,
+                              follow_redirects=True)
+
+        # He finds an old tab left open with a password reset link, he
+        # follows it
+        prlink = '/auth/reset_password/reset_token_goes_here'
+        rv = self.client.get(prlink, follow_redirects=True)
+
+        # Gets redirected to home because he is already logged in
+        assert b'Edit Profile' in rv.data
+        assert b'Companies\n</title>' in rv.data
+        assert b'<h1>New Companies' in rv.data
+
+
+
     def test_user_back_to_explore(self):
         self.load_example_user()
         self.load_example_companies()
