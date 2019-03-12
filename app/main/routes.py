@@ -222,3 +222,9 @@ def json_new_company():
     response = jsonify(company.to_dict())
     return response
 
+@bp.route('/fail')
+def fail_on_purpose():
+    ''' Trigger a 500 error in order to verify the flask error template
+    rewriting tests.
+    '''
+    db.session.add(Borked)
