@@ -16,8 +16,7 @@ MVC Architecture:
 Well defined interfaces for easier testability
 
 100% Test Coverage:
-Use pytest and geckodriver with splinter to click buttons and simulate
-an operator.
+Use pytest to click buttons and simulate an operator.
 
 Continuous Integration ready:
 Example travis configuration
