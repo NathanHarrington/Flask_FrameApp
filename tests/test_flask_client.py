@@ -6,7 +6,7 @@ from flask import url_for
 from app import create_app, db
 from app.models import User, Post, Crawled
 from config import Config
-import random
+import random, json
 
 class TestConfig(Config):
     TESTING = True
@@ -539,13 +539,9 @@ class TestFunctionalExamples():
 
     def test_user_adds_company(self):
         # Martin notices a company is missing, decides to add it himself
-        self.load_example_user()
-        self.load_example_user('Bob')
-        self.load_example_companies()
-        self.martin_login()
 
         # Goes to the '/new_company' link directly, which he was told
-        # through a side channel
+        # through a side channel - no login required
         rv = self.client.get('/new_company', follow_redirects=True)
 
         # Sees that it has form fields
@@ -567,4 +563,34 @@ class TestFunctionalExamples():
 
         # Sees the flash message that says new company added
         assert b'Added a company' in rv.data
+
+    def test_json_api_add_company(self):
+        # Martin is a hacker. He likes json. He writes a script to load
+        # companies through json
+
+        # JSON api adds a crawl_date dictionary item
+        form_data = {'ein_number': '1234567890',
+                     'company_type': 'JSON LLC',
+                     'certificate_type': 'LLC',
+                     'company_name': 'LLC',
+                     'street_address': 'LLC',
+                     'city': 'LLC',
+                     'state': 'LLC',
+                     'zip_code': 'LLC',
+                     'crawl_date': '2019-02-11 10:04:07.196493',
+                     'phone': '919-267-3558'}
+
+
+        json_data = json.dumps(form_data)
+        rv = self.client.put('/json_new_company', data=json_data,
+                              content_type='application/json')
+
+        # Verify the company id appears at the top of the companies
+        # list - login first to view them
+        self.load_example_user()
+        self.martin_login()
+        rv = self.client.get('/companies')
+
+        assert b'1234567890' in rv.data
+        assert b'JSON LLC' in rv.data
 
