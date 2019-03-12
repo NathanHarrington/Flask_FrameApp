@@ -23,11 +23,11 @@ class TestUserModelCase():
         self.app_context.pop()
 
     def test_password_hashing(self):
-        u = User(username='susan')
-        assert u == '<User susan>'
-        u.set_password('cat')
-        assert u.check_password('dog') == False
-        assert u.check_password('cat') == True
+        one_user = User(username='susan')
+        assert f'{one_user}' == '<User susan>'
+        one_user.set_password('cat')
+        assert one_user.check_password('dog') == False
+        assert one_user.check_password('cat') == True
 
     def test_avatar(self):
         u = User(username='john', email='john@example.com')
@@ -65,6 +65,7 @@ class TestUserModelCase():
         u4 = User(username='david', email='david@example.com')
         db.session.add_all([u1, u2, u3, u4])
 
+
         # create four posts
         now = datetime.utcnow()
         p1 = Post(body="post from john", author=u1,
@@ -77,6 +78,9 @@ class TestUserModelCase():
                   timestamp=now + timedelta(seconds=2))
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
+
+        # Test repr
+        assert f'{p1}' == '<Post post from john>'
 
         # setup the followers
         u1.follow(u2)  # john follows susan

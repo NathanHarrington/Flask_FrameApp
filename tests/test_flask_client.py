@@ -404,6 +404,28 @@ class TestFunctionalExamples():
         rv = self.client.get('/explore')
         assert b'Simulated post from tester' in rv.data
 
+
+    def test_user_can_post_lots(self):
+        self.load_example_user()
+        self.load_example_companies()
+        self.martin_login()
+
+        # From their profile page, user submits a bunch of new posts
+
+        for post_num in range(10):
+            form_data = {'post': f'Simulated post {post_num}' }
+            rv = self.client.post('/my_posts', data=form_data,
+                                  follow_redirects=True)
+
+        # User sees multiple pages available
+        rv = self.client.get('/my_posts')
+        assert b'/my_posts?page=2' in rv.data
+
+        # He clicks the next link, verifies previous is visible
+        rv = self.client.get('/my_posts?page=2')
+        assert b'/my_posts?page=1' in rv.data
+
+
     def test_user_can_change_username(self):
         self.load_example_user()
         self.load_example_companies()
@@ -593,4 +615,21 @@ class TestFunctionalExamples():
 
         assert b'1234567890' in rv.data
         assert b'JSON LLC' in rv.data
+
+    def test_summary(self):
+        self.load_example_user()
+        self.load_example_companies()
+
+        # Martin goes to the explore page
+        self.martin_login()
+        rv = self.client.get('/explore')
+
+        # He sees the summary link, follows it
+        assert b'/summary' in rv.data
+        rv = self.client.get('/summary')
+        assert b'Recent Posts' in rv.data
+
+        # He sees the page links, clicks one page to the right
+        assert b'/summary?page=2' in rv.data
+        rv = self.client.get('/summary?page=2')
 
