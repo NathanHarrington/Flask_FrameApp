@@ -24,6 +24,7 @@ class TestUserModelCase():
 
     def test_password_hashing(self):
         u = User(username='susan')
+        assert u == '<User susan>'
         u.set_password('cat')
         assert u.check_password('dog') == False
         assert u.check_password('cat') == True
