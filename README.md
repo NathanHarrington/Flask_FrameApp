@@ -106,9 +106,21 @@ pipenv run python scripts/load_example_companies.py 100 'http://localhost:5000'
 # Choose the instance:
 # General purpose, t2.micro, Free tier eligible, 1CPU, 1Gb RAM, EBS only
 
-# Using google domains, Assign A record for your domain to point to this
-# server.  Google domains is the best option as it has 'privacy' on by
-# default which costs extra most other places.
+# Using google domains, configure your domain to support web requests on
+# www.domain only
+# The google domains DNS Configuration is:
+#
+# Synthetic records:
+#        subdomain forward of:
+#                @ -> www.newclia.com
+#                Temporary redirect (302)
+#                Do not forward path
+#                Disable SSL
+#
+# Custom Resource Records:
+#        www     A       <AWS EC2 ip address>
+
+
 
 # Accept all defaults, connect to the instance with:
 ssh \
@@ -202,8 +214,61 @@ cp deployment/nginx/frameapp_nginx.conf /etc/nginx/conf.d/
 systemctl enable nginx
 systemctl restart nginx
 
+# If you see 403 permission denied errors when attempting to serve
+# static files, you can try:
+#  chown -R nginx.nginx app/static
+#  sudo systemctl restart nginx
+
 # Connect to the EC2 domain name with a browser, confirm security
 # exception for the self-signed certificate
+</pre>
+
+## Lets Encrypt Certificate Generation
+<pre>
+# Certbot makes this easy:
+
+dnf install certbot
+
+# Create a simple nginx  configuration based on the default that ships with
+# fedora. Find the lines that say:
+cp /etc/nginx/nginx.conf /etc/nginx/pre.letsencrypt.nginx.conf
+cp /etc/nginx/original.system.nginx.conf /etc/nginx/nginx.conf
+
+	location / {
+	}
+
+# Directly underneath, add:
+
+	location ~ /.well-known {
+		root /usr/share/nginx/;
+	}
+
+# Restart nginx with default config, and a known configuration for
+# certbot
+systemctl restart nginx
+
+# Verify with a dry run, where YOURDOMAIN is the full www.yourdomain.com
+sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN --dry-run
+
+# Run the actual
+sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN
+
+# Immediately make a copy of the certbot generated files to a backup location:
+cp -r /etc/letsencrypt/archive/YOURDOMAIN \
+	~/projects/my_lets_encrypt_backup_YOURDOMAIN
+
+# Overwrite this projects self-signed certs with the lets encrypt versions:
+cp /etc/letsencrypt/archive/YOURDOMAIN/cert1.pem \
+    ~/projects/Flask_FrameApp/certs/cert.pem
+
+cp /etc/letsencrypt/archive/YOURDOMAIN/privkey1.pem \
+    ~/projects/Flask_FrameApp/keys/key.pem
+
+# Reset to the original configuration, which now uses the lets encrypt
+# certifications instead of the self-signed certificates
+cp /etc/nginx/pre.letsencrypt.nginx.conf /etc/nginx/nginx.conf
+systemctl restart nginx
+
 </pre>
 
 ## Instructions for installation on Windows alongside miniconda
