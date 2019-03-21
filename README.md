@@ -259,10 +259,10 @@ cp -r /etc/letsencrypt/archive/YOURDOMAIN \
 
 # Overwrite this projects self-signed certs with the lets encrypt versions:
 cp /etc/letsencrypt/archive/YOURDOMAIN/cert1.pem \
-    ~/projects/Flask_FrameApp/certs/cert.pem
+    ~/projects/Flask_FrameApp/certs/cert1.pem
 
 cp /etc/letsencrypt/archive/YOURDOMAIN/privkey1.pem \
-    ~/projects/Flask_FrameApp/keys/key.pem
+    ~/projects/Flask_FrameApp/keys/privkey1.pem
 
 # Reset to the original configuration, which now uses the lets encrypt
 # certifications instead of the self-signed certificates
