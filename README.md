@@ -261,8 +261,8 @@ cp -r /etc/letsencrypt/archive/YOURDOMAIN \
 	~/projects/my_lets_encrypt_backup_YOURDOMAIN
 
 # Overwrite this projects self-signed certs with the lets encrypt versions:
-cp /etc/letsencrypt/archive/YOURDOMAIN/cert1.pem \
-    ~/projects/Flask_FrameApp/certs/cert1.pem
+cp /etc/letsencrypt/archive/YOURDOMAIN/fullchain1.pem \
+    ~/projects/Flask_FrameApp/certs/fullchain1.pem
 
 cp /etc/letsencrypt/archive/YOURDOMAIN/privkey1.pem \
     ~/projects/Flask_FrameApp/keys/privkey1.pem
