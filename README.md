@@ -26,6 +26,8 @@ Deployment instructions:
 Amazon Web Services EC2 -> Nginx -> and all the associated free tier goodness
 
 This is based heavily on the [Flask Mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+![Example Layout](/docs/flask_frameapp_demo.png "Flask_FrameApp demo")
+
 </pre>
 
 ## Installation
