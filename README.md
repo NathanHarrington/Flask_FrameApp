@@ -297,3 +297,11 @@ Verify that the version of python is what you downloaded and 'conda' does not ap
 </pre>
 
 
+## Favicon generation
+<pre>
+The configuration presented here was built by:
+1. Build a 1024x1024 svg icon.
+2. Upload it to realfavicongenerator.net
+3. Extract the provided package into static/favicons, tweak as necessary
+
+</pre>
