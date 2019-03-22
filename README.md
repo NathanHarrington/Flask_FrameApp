@@ -107,7 +107,8 @@ pipenv run python scripts/load_example_companies.py 100 'http://localhost:5000'
 # General purpose, t2.micro, Free tier eligible, 1CPU, 1Gb RAM, EBS only
 
 # Using google domains, configure your domain to support web requests on
-# www.domain only
+# www.domain only. Any request to domain.com will be automatically
+# redirected to www.domain.com
 # The google domains DNS Configuration is:
 #
 # Synthetic records:
@@ -225,7 +226,9 @@ systemctl restart nginx
 
 ## Lets Encrypt Certificate Generation
 <pre>
-# Certbot makes this easy:
+# Use certbot to create a lets encrypt certificate for the website. Make
+# sure to follow the instructions above for redirecting all bare domain
+# requests to www.domain.com first.
 
 dnf install certbot
 
