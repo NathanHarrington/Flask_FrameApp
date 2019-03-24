@@ -2,7 +2,7 @@
 
 
 
-### Flask_FrameApp is designed to be the baseline project for the next level of Cordince customer facing experiments. The main design goals are:
+### The baseline project for the next level of Cordince customer facing experiments. The main design goals are:
 <pre>
 Flask-style minimal application development 
 
@@ -21,9 +21,11 @@ Use pytest to click buttons and simulate an operator.
 Continuous Integration ready:
 Example travis configuration
 Example appveyor configuration
+Coverage and Maintainability badges
 
 Deployment instructions:
 Amazon Web Services EC2 -> Nginx -> and all the associated free tier goodness
+Lets Encrypt SSL certificates
 
 This is based heavily on the [Flask Mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 </pre>
