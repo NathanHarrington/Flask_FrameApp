@@ -12,7 +12,7 @@ install:
 
 # command to run tests
 script:
-  - pipenv run py.test --disable-pytest-warnings -x tests/
+  - pipenv run py.test --disable-pytest-warnings -x tests/ --cov=app --cov-report term-missing
 
 after_success:
   - pip install coveralls --upgrade 
