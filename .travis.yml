@@ -14,9 +14,6 @@ install:
 script:
   - pipenv run py.test --disable-pytest-warnings -x tests/
 
-
 after_success:
   - pip install coveralls --upgrade 
   - coveralls
-
-
