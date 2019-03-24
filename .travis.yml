@@ -17,3 +17,5 @@ script:
 after_success:
   - pip install coveralls --upgrade 
   - coveralls
+  - pip install codecov
+  - codecov
