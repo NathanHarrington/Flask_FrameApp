@@ -1,7 +1,7 @@
 ''' Bare bones testing of bytes returned in a response payload. Designed
 to bridge the gap between unit tests and functional tests.
 '''
-import os, shutil
+import os, shutil, sys
 from app import create_app, db
 from config import Config
 
