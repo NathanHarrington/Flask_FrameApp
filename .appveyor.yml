@@ -23,6 +23,8 @@ test_script:
   - "pipenv run python setup.py develop"
   - "set FLASK_APP=frameapp.py"
   - "pipenv run py.test --disable-pytest-warnings -x tests/test_errors.py"
+  - "pipenv run py.test --disable-pytest-warnings -x tests/test_units.py"
+  - "pipenv run py.test --disable-pytest-warnings -x tests/test_flask_client.py"
 
 # Do not close the session, wait for an rdp connection for 60 minutes-
 # also see init
