@@ -1,12 +1,6 @@
-Flask_FrameApp is designed to be the baseline project for the next level
-of Cordince customer facing experiments. The main design goals are:
+[![Travis Build Stats](https://travis-ci.org/NathanHarrington/Flask_FrameApp.svg?branch=master)](https://travis-ci.org/NathanHarrington/Flask_FrameApp) [![Appveyor Build Stats](https://ci.appveyor.com/api/projects/status/mojjlxt7dg5s2s6a/branch/master?svg=true)](https://ci.appveyor.com/project/NathanHarrington/flask-frameapp/) [![Coverage Status](https://coveralls.io/repos/github/NathanHarrington/Flask_FrameApp/badge.svg)](https://coveralls.io/github/NathanHarrington/Flask_FrameApp)
 
-[![Travis Build Stats](https://travis-ci.org/NathanHarrington/Flask_FrameApp.svg?branch=master)](https://travis-ci.org/NathanHarrington/Flask_FrameApp)
-
-
-
-[![Appveyor Build Stats](https://ci.appveyor.com/api/projects/status/mojjlxt7dg5s2s6a/branch/master?svg=true)](https://ci.appveyor.com/project/NathanHarrington/flask-frameapp/)
-
+### Flask_FrameApp is designed to be the baseline project for the next level of Cordince customer facing experiments. The main design goals are:
 <pre>
 Flask-style minimal application development 
 
