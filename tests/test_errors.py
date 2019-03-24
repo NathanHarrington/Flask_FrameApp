@@ -14,7 +14,9 @@ class TestErrorsAndLogs(Config):
     def setup(self):
         # Remove the log folder for coverage
         if os.path.exists('logs'):
-            shutil.rmtree('logs')
+            # But not on Windows, as that throws a file in use error
+            if not sys.platform.startswith('win'):
+                shutil.rmtree('logs')
 
         self.app = create_app(TestConfigForServerError)
         self.app_context = self.app.app_context()
