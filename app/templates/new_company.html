@@ -1,11 +1,24 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <h1>New Company</h1>
     <div class="row">
         <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                {% for field in form %}
+                <div class="form-group">
+                    <label class="control-label" for="{{ field.name }}">{{ field.label }}</label>
+                    <textarea class="form-control" id="{{ field.name }}" name="{{ field.name }}" required></textarea>
+                    {% for error in field.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <p>
+                    {{ form.submit() }}
+                </p>
+            </form>
         </div>
     </div>
 {% endblock %}

@@ -1,9 +1,18 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <h2>Add a post:</h2>
-    {{ wtf.quick_form(form) }}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label }}<br>
+            {{ form.post(size=140) }}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+
     {% if posts.items|length > 0 %}
         <h2>My Posts: </h2>
         {% for post in posts.items %}
@@ -16,9 +25,9 @@
                         <span aria-hidden="true">&larr;</span>Newer
                     </a>
                 </li>
-    
+
                 <span>Page {{ posts.page }} of {{ posts.page_max }}</span>
-    
+
                 <li class="next{% if not next_url %} disabled{% endif %}">
                     <a href="{{ next_url or '#' }}">Older
                         <span aria-hidden="true">&rarr;</span>

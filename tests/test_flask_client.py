@@ -433,7 +433,7 @@ class TestFunctionalExamples():
 
         # Martin looks at their profile, notices the 'username' field
         rv = self.client.get('/edit_profile')
-        assert b'<input class="form-control" id="username"' in rv.data
+        assert b'<input id="username" name="username"' in rv.data
 
         # Follows the link, fills out the form, submits it
         form_data = {'username': 'MegaMarvin' }
@@ -456,7 +456,7 @@ class TestFunctionalExamples():
 
         # Martin looks at their profile, notices the 'username' field
         rv = self.client.get('/edit_profile')
-        assert b'<input class="form-control" id="username"' in rv.data
+        assert b'<input id="username" name="username"' in rv.data
 
         # Follows the link, fills out the form, submits it
         form_data = {'username': 'Bob' }
