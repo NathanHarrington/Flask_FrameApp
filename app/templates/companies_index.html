@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <h1>New Companies Created</h1>
@@ -30,7 +29,16 @@
 
     {% if form %}
     <h1>New Company updates in your inbox!</h1>
-    {{ wtf.quick_form(form) }}
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.email.label }}<br>
+                {{ form.email(size=32) }}
+            </p>
+            <p>
+                {{ form.submit() }}
+            </p>
+        </form>
     <br>
     {% endif %}
 {% endblock %}
