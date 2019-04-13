@@ -488,10 +488,10 @@ class TestFunctionalExamples():
         self.load_example_companies()
         rv = self.client.get('/')
         assert b'New Company updates in your inbox' in rv.data
-        assert b'<a href="/index?page=2"' in rv.data
+        assert b'<a class="page-link" href="/index?page=2"' in rv.data
 
         rv = self.client.get('/?page=2')
-        assert b'<a href="/index?page=3"' in rv.data
+        assert b'<a class="page-link" href="/index?page=3"' in rv.data
 
     def test_martin_follows_bob(self):
         self.load_example_user()
