@@ -1,5 +1,4 @@
-{% extends 'bootstrap/base.html' %}
-{% import "bootstrap/google.html" as google %}
+{% extends 'bootstrap4-base.html' %}
 
 {% block head %}
     {{super()}}
@@ -10,7 +9,6 @@
     <link rel="manifest" href="/static/favicons/site.webmanifest">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-    {{ google.uanalytics('UA-000000000-0') }}
 {% endblock %}
 
 {% block title %}
