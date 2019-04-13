@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <h1>Edit Profile</h1>
@@ -11,7 +10,23 @@
             <a href="{{ url_for('posts.my_posts') }}">
                 <button type="button" class="btn btn-info">New Post</button>
             </a>
-            {{ wtf.quick_form(form) }}
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.username.label }}<br>
+                    {{ form.username(size=32) }}
+                    {% for error in form.username.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.about_me.label }}<br>
+                    {{ form.about_me(size=140) }}
+                </p>
+                <p>
+                    {{ form.submit() }}
+                </p>
+            </form>
         </div>
     </div>
 {% endblock %}
