@@ -106,7 +106,7 @@ class TestFunctionalExamples():
     def load_example_companies(self, total_companies=20):
         ''' App context is already established, so connect to the db
         directly and add some test companies based on random dictionary
-        values. 
+        values.
         '''
 
         comp = {
@@ -121,7 +121,7 @@ class TestFunctionalExamples():
             }
         for comp_item in range(total_companies):
             ri = random.randint
-            rnd_number = random.randint(0,12345)
+            rnd_number = random.randint(0,123456789)
             newc = Crawled(ein_number=rnd_number,
                  company_type=comp['company_type'][ri(0,1)],
                  certificate_type=comp['certificate_type'][ri(0,1)],
