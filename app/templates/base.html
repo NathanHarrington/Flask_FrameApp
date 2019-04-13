@@ -63,18 +63,21 @@
         {% block app_content %}{% endblock %}
     </div>
 
-{% block footer %}
-    <footer class="page-footer font-small blue">
-        <div class="footer-copyright text-center py-3">2019 Template:
-            <a href="https://github.com/NathanHarrington/Flask_FrameApp">Flask_FrameApp</a>
-        </div>
-    </footer>
-{% endblock footer %}
-
-
+    {% block footer %}
+        <footer class="page-footer font-small blue">
+            <div class="footer-copyright text-center py-3">2019 Template:
+                <a href="https://github.com/NathanHarrington/Flask_FrameApp">Flask_FrameApp</a>
+            </div>
+        </footer>
+    {% endblock footer %}
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    {{ moment.include_moment() }}
+    <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/override.css')}}">
 {% endblock %}

@@ -38,7 +38,7 @@ class TestFunctionalExamples():
 
         # He notices the page title and header mention companies
         assert b'Companies\n</title>' in rv.data
-        assert b'<h1>New Companies' in rv.data
+        assert b'<h1 class="top-gap-h1">New Companies' in rv.data
 
 
     def test_new_sign_up(self):
@@ -259,7 +259,7 @@ class TestFunctionalExamples():
         # logged in
         # He notices the page title and header mention companies
         assert b'Companies\n</title>' in rv.data
-        assert b'<h1>New Companies' in rv.data
+        assert b'<h1 class="top-gap-h1">New Companies' in rv.data
 
     def test_register_after_login_goes_back_to_index(self):
         # Martin logs in
@@ -277,7 +277,7 @@ class TestFunctionalExamples():
         # logged in
         # He notices the page title and header mention companies
         assert b'Companies\n</title>' in rv.data
-        assert b'<h1>New Companies' in rv.data
+        assert b'<h1 class="top-gap-h1">New Companies' in rv.data
 
     def test_reset_password_after_login_goes_to_index(self):
         # Martin logs in, then goes to the 'reset password' link
@@ -293,7 +293,7 @@ class TestFunctionalExamples():
         # He sees that he's back on the main index with edit profile
         # visible
         assert b'Companies\n</title>' in rv.data
-        assert b'<h1>New Companies' in rv.data
+        assert b'<h1 class="top-gap-h1">New Companies' in rv.data
         assert b'Edit Profile' in rv.data
 
     def test_reset_password_displays_feedback(self):
@@ -329,7 +329,7 @@ class TestFunctionalExamples():
 
         assert b'Edit Profile' not in rv.data
         assert b'Companies\n</title>' in rv.data
-        assert b'<h1>New Companies' in rv.data
+        assert b'<h1 class="top-gap-h1">New Companies' in rv.data
 
     def test_revisit_of_a_password_reset_link(self):
         # Martin logs in
@@ -346,7 +346,7 @@ class TestFunctionalExamples():
         # Gets redirected to home because he is already logged in
         assert b'Edit Profile' in rv.data
         assert b'Companies\n</title>' in rv.data
-        assert b'<h1>New Companies' in rv.data
+        assert b'<h1 class="top-gap-h1">New Companies' in rv.data
 
 
 
