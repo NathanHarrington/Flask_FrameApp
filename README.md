@@ -4,8 +4,6 @@
 
 ### The baseline project for the next level of Cordince customer facing experiments. The main design goals are:
 
-Older version available in the bootstrap_3 branch
-
 <pre>
 Flask-style minimal application development 
 
