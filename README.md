@@ -59,12 +59,6 @@ pipenv run flask run
 
 ## Run tests:
 <pre>
-# Make sure firefox is installed on the system, separate from the geckodriver
-
-export PATH=$PWD/scripts/drivers/linux64/:$PATH
-# On windows use:
-#  set PATH=c:\projects\Flask_Frameapp\scripts\drivers\windows64\;%PATH%
-
 py.test --verbose tests/test_units.py
 py.test --verbose tests/test_functional.py
 
