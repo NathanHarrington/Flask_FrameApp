@@ -3,8 +3,15 @@
 
 
 ### The baseline project for the next level of Cordince customer facing experiments. The main design goals are:
+
+Older version available in the bootstrap_3 branch
+
 <pre>
 Flask-style minimal application development 
+
+Bootstrap 4
+
+Fully contained content delivery for network-limited contexts.
 
 Truly test driven development. Write the users behavior in a functional
 test, make the individual unit tests required for any new features,
