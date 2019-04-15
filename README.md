@@ -2,7 +2,18 @@
 
 
 
-### The baseline project for the next level of Cordince customer facing experiments. The main design goals are:
+### The bootrap-3 version project for the next level of Cordince customer facing experiments. 
+
+Unlike the master branch, this version was developed with
+flask-bootstrap integrated. The master branch has all files served
+locally, and has the most up-to-date versions of libraries directly
+linked in the templates. 
+
+In contrast, this version uses very old bootstrap 3 versions, but has
+the benefit of including them more tightly integrated into the flask
+app.
+
+## The main design goals are:
 <pre>
 Flask-style minimal application development 
 
