@@ -99,8 +99,7 @@ pipenv run python scripts/load_example_companies.py 100 'http://localhost:5000'
 
 ## Deploying on EC2
 <pre>
-# Launch a Fedora 29 Cloud Base Images for [Amazon Public
-# Cloud](https://alt.fedoraproject.org/cloud/).
+# Launch a Fedora 29 Cloud Base Images for [Amazon Public Cloud](https://alt.fedoraproject.org/cloud/).
 
 # Use the 'Standard HVM AMIs' for lower cost, not SSD
 # Click the 'click to launch' button, then choose the datacenter by
@@ -153,13 +152,17 @@ dnf -y install git policycoreutils-python-utils supervisor nginx
 
 # Save the file above, then open the port:
 semanage port -a -t ssh_port_t -p tcp <port number>
-
-# Reboot, verify your configuration on <port number>
     
 # change 'enforcing' to 'permissive'
 vi /etc/selinux/config
 reboot
 
+# Verify connection on ssh port 6787 instead of 22
+ssh \
+    -o port=6787 \
+    -i your_key_pair.pem \
+    -R 6622:localhost:22 \
+    fedora@amazon-ec2-public-dnsname
 
 # Clone from your local ssh to enforce having to type in your password
 # every time and not needing to have the github credentials on the
@@ -273,6 +276,37 @@ cp /etc/letsencrypt/archive/YOURDOMAIN/privkey1.pem \
 # Reset to the original configuration, which now uses the lets encrypt
 # certifications instead of the self-signed certificates
 cp /etc/nginx/pre.letsencrypt.nginx.conf /etc/nginx/nginx.conf
+systemctl restart nginx
+
+</pre>
+
+## Lets Encrypt Certificate Renewal
+<pre>
+# Create a backup of the live configuration
+sudo cp /etc/nginx/nginx.conf /etc/nginx/pre-renew.letsencrypt.nginx.conf
+
+# Find the lines that say location / like above, and directly underneath, add:
+	location ~ /.well-known {
+		root /usr/share/nginx/;
+	}
+
+# Verify with a dry run, where YOURDOMAIN is the full www.yourdomain.com
+sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN --dry-run
+
+# Run the actual
+sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN
+
+# Select option 2 to renew & replace the cert
+# Copy the self-signed, renew certs to the long term storage location
+# for the ceritifcates:
+# Overwrite this projects self-signed certs with the lets encrypt versions:
+cp /etc/letsencrypt/live/YOURDOMAIN/fullchain.pem \
+    ~/projects/Flask_FrameApp/certs/fullchain1.pem
+
+cp /etc/letsencrypt/live/YOURDOMAIN/privkey1.pem \
+    ~/projects/Flask_FrameApp/certs/privkey1.pem
+
+# Restart the web server
 systemctl restart nginx
 
 </pre>
