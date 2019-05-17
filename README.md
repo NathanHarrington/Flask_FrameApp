@@ -300,11 +300,17 @@ sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN
 # Copy the self-signed, renew certs to the long term storage location
 # for the ceritifcates:
 # Overwrite this projects self-signed certs with the lets encrypt versions:
-cp /etc/letsencrypt/live/YOURDOMAIN/fullchain.pem \
+cp /etc/letsencrypt/live/YOURDOMAIN/fullchainN.pem \
     ~/projects/Flask_FrameApp/certs/fullchain1.pem
 
-cp /etc/letsencrypt/live/YOURDOMAIN/privkey1.pem \
+cp /etc/letsencrypt/live/YOURDOMAIN/privkeyN.pem \
     ~/projects/Flask_FrameApp/certs/privkey1.pem
+
+cp /etc/letsencrypt/live/YOURDOMAIN/certN.pem \
+    ~/projects/Flask_FrameApp/certs/cert1.pem
+
+cp /etc/letsencrypt/live/YOURDOMAIN/chainN.pem \
+    ~/projects/Flask_FrameApp/certs/chain1.pem
 
 # Restart the web server
 systemctl restart nginx
