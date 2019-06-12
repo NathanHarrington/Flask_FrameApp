@@ -223,8 +223,11 @@ systemctl restart nginx
 
 # If you see 403 permission denied errors when attempting to serve
 # static files, you can try:
+#  sudo chmod 710 /home/fedora
+#  sudo usermod -a -G fedora nginx
 #  chown -R nginx.nginx app/static
 #  sudo systemctl restart nginx
+#  (Reboot may be required)
 
 # Connect to the EC2 domain name with a browser, confirm security
 # exception for the self-signed certificate
