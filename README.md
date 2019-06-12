@@ -179,7 +179,7 @@ pip install pipenv
 # Now that pipenv is installed, setup this environmentt 
 pipenv install --dev
 
-python run setup.py develop
+pipenv run python setup.py develop
 export FLASK_APP=frameapp.py
 # On windows use:
 #  set FLASK_APP=frameapp.py
