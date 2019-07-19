@@ -239,12 +239,14 @@ systemctl restart nginx
 # sure to follow the instructions above for redirecting all bare domain
 # requests to www.domain.com first.
 
+# Make a backup of your existing config
+cp /etc/nginx/nginx.conf /etc/nginx/pre.letsencrypt.nginx.conf
+cp /etc/nginx/original.system.nginx.conf /etc/nginx/nginx.conf
+
 dnf install certbot
 
 # Create a simple nginx  configuration based on the default that ships with
-# fedora. Find the lines that say:
-cp /etc/nginx/nginx.conf /etc/nginx/pre.letsencrypt.nginx.conf
-cp /etc/nginx/original.system.nginx.conf /etc/nginx/nginx.conf
+# fedora. In /etc/nginx/nginx.conf Find the lines that say:
 
 	location / {
 	}
@@ -272,6 +274,9 @@ cp -r /etc/letsencrypt/archive/YOURDOMAIN \
 # Overwrite this projects self-signed certs with the lets encrypt versions:
 cp /etc/letsencrypt/archive/YOURDOMAIN/fullchain1.pem \
     ~/projects/Flask_FrameApp/certs/fullchain1.pem
+
+cp /etc/letsencrypt/archive/YOURDOMAIN/cert1.pem \
+    ~/projects/Flask_FrameApp/keys/cert1.pem
 
 cp /etc/letsencrypt/archive/YOURDOMAIN/privkey1.pem \
     ~/projects/Flask_FrameApp/keys/privkey1.pem
