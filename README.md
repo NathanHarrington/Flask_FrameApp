@@ -269,7 +269,7 @@ sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN
 
 # Immediately make a copy of the certbot generated files to a backup location:
 cp -r /etc/letsencrypt/archive/YOURDOMAIN \
-	~/projects/my_lets_encrypt_backup_YOURDOMAIN
+	~/projects/my_lets_encrypt_backup_YOURDOMAIN.$(date +%Y%m%d)
 
 # Overwrite this projects self-signed certs with the lets encrypt versions:
 cp /etc/letsencrypt/archive/YOURDOMAIN/fullchain1.pem \
@@ -298,30 +298,35 @@ sudo cp /etc/nginx/nginx.conf /etc/nginx/pre-renew.letsencrypt.nginx.conf
 		root /usr/share/nginx/;
 	}
 
-# Verify with a dry run, where YOURDOMAIN is the full www.yourdomain.com
-sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN --dry-run
+# YOURDOMAIN is a full www.domain.com type domain
+export YOURDOMAIN=www.domain.com
+export PROJECT=~/projects/Flask_FrameApp
+export SRC=/etc/letsencrypt/live/$YOURDOMAIN/
 
-# Run the actual
-sudo certbot certonly --webroot -w /usr/share/nginx/ -d YOURDOMAIN
+sudo certbot certonly --webroot -w /usr/share/nginx/ -d $YOURDOMAIN --dry-run
 
-# Select option 2 to renew & replace the cert
-# Copy the self-signed, renew certs to the long term storage location
-# for the ceritifcates:
+# Run without dry run
+# If it says it's not close to expiry, select renew
+sudo certbot certonly --webroot -w /usr/share/nginx/ -d $YOURDOMAIN
+
+# Immediately make a copy of the certbot generated files to a backup location:
+sudo cp -r /etc/letsencrypt/archive/$YOURDOMAIN \
+        ~/projects/my_lets_encrypt_backup_${YOURDOMAIN}.$(date +%Y%m%d)
+
+
 # Overwrite this projects self-signed certs with the lets encrypt versions:
-cp /etc/letsencrypt/live/YOURDOMAIN/fullchainN.pem \
-    ~/projects/Flask_FrameApp/certs/fullchain1.pem
 
-cp /etc/letsencrypt/live/YOURDOMAIN/privkeyN.pem \
-    ~/projects/Flask_FrameApp/certs/privkey1.pem
+sudo cp $SRC/fullchain.pem $PROJECT/certs/fullchain1.pem
+sudo cp $SRC/cert.pem $PROJECT/certs/cert1.pem
+sudo cp $SRC/privkey.pem $PROJECT/certs/privkey1.pem
+sudo cp $SRC/chain.pem $PROJECT/certs/chain1.pem
 
-cp /etc/letsencrypt/live/YOURDOMAIN/certN.pem \
-    ~/projects/Flask_FrameApp/certs/cert1.pem
+sudo systemctl restart nginx
 
-cp /etc/letsencrypt/live/YOURDOMAIN/chainN.pem \
-    ~/projects/Flask_FrameApp/certs/chain1.pem
-
-# Restart the web server
-systemctl restart nginx
+# The approach here is to leave the certificate files in the folder,
+# unversioned. This prevents you from committing them to a source
+# repository by mistake. It does let a raw directory level backup pickup
+# the cert files automatically.
 
 </pre>
 
